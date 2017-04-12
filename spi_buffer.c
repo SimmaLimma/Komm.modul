@@ -14,6 +14,9 @@ typedef struct {
 
 spi_buffer_typedef rx_spi = {{0}, 0 , 0 ,0}; //declaring a receive buffer
 spi_buffer_typedef tx_spi = {{0}, 0 , 0 ,0}; //declaring a transmit buffer
+	
+//flag for checking status if the spi_stc chain is currently working
+unsigned char spi_stc_chain_in_work = 0;
 
 ISR(SPI_STC_vect){
 	/* this ISR first reads value, then either send
@@ -21,6 +24,8 @@ ISR(SPI_STC_vect){
 	*else "stall"
 	*
 	*/
+	
+	spi_stc_chain_in_work = 1;
 	
 	unsigned char in_value;
 	
@@ -33,6 +38,9 @@ ISR(SPI_STC_vect){
 		rx_spi.buffer[rx_spi.i_last] = in_value;
 		rx_spi.i_last++;
 		rx_spi.num_bytes++;
+		
+		//no empty anymore
+		spi_rx_not_empty_flag = 1;
 	}
 	
 	
@@ -40,6 +48,14 @@ ISR(SPI_STC_vect){
 	if(rx_spi.i_last == SPI_BUFFER_SIZE){
 		
 		rx_spi.i_last = 0;	
+	}
+	
+	
+	//If SPI-chain stops, enable INT2-interrupt
+	if(tx_spi.num_bytes == 0){
+			
+		EIMSK |= (1<<INT2);
+		spi_stc_chain_in_work = 0;
 	}
 	
 	//if there is byte to send, put it in SPDR
@@ -52,10 +68,7 @@ ISR(SPI_STC_vect){
 	}
 	
 	
-	if(tx_spi.num_bytes == 0){
-			
-		EIMSK |= (1<<INT2)
-	}
+
 	
 	//turnover
 	if(tx_spi.i_first == SPI_BUFFER_SIZE){
@@ -107,6 +120,10 @@ unsigned char spi_get_byte(void){
 		value = rx_spi.buffer[rx_spi.i_first];
 		rx_spi.i_first++;
 		rx_spi.num_bytes--;
+	} 
+	
+	if(rx_spi.num_bytes == 0) {
+		spi_rx_not_empty_flag = 0;
 	}
 	
 	
@@ -116,6 +133,8 @@ unsigned char spi_get_byte(void){
 	}
 	
 
+	
+	
 	sei();
 	
 	return value;
@@ -152,11 +171,12 @@ void spi_send_byte(unsigned char value){
 		
 	//if there is only one byte in buffer, no SPI_STC is "in work"
 	//Therefore, it is started by adding the byte to SPDR
-	if(tx_spi.num_bytes == 1){
+	/*if((tx_spi.num_bytes == 1) && !(spi_stc_chain_in_work)){
 		SPDR = tx_spi.buffer[tx_spi.i_first];
 		tx_spi.i_first++;
 		tx_spi.num_bytes--;
-	}
+		spi_stc_chain_in_work = 1;
+	}*/
 	
 	//index turn-around
 	if(tx_spi.i_first == SPI_BUFFER_SIZE){
