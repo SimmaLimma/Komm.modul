@@ -20,9 +20,7 @@ spi_buffer_typedef tx_spi = {{0}, 0 , 0 ,0}; //declaring a transmit buffer
 
 ISR(SPI_STC_vect){
 
-	//TEST
-	PORTA |= (1<<PORTA4);
-	//END of test
+
 	
 	//Turn PORTA0 to low so master can detect rising edge
 	PORTA &= ~(1<<PORTA0);
