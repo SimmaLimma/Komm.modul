@@ -41,6 +41,8 @@ volatile unsigned char uart0_tx_full_flag = 0;
 volatile unsigned char uart0_rx_not_empty_flag = 0;
 volatile unsigned char uart0_tx_not_empty_flag = 0;
 
+volatile unsigned char spi_rx_not_empty_flag = 0;
+
 
 /*----------Interrupts---------------*/
 
@@ -110,18 +112,6 @@ void USART0_init(unsigned int baud_setting)
 }
 
 
-void spi_master_init(void) //not initialized
-{
-	//set MOSI and SCK as output, all others as input, and PB4 to output (because Master dont use SS-pin)
-	DDRB = (1<<DDB5) | (1<<DDB7) | (1<<DDB4);
-	// enable SPI, Master, set cloxk rate fck/16, and enable SPI_STC interrupt, and sets Slave Select (SS) to high
-	SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPR0) | (0<<SPIE); //CPOL cpha
-	//Enable int_2 external interrupt and interrupt happens on rising edge
-    EICRA = (1<<ISC20) | (1<<ISC21);
-	EIMSK = (1<<INT2);
-	
-
-}
 
 
 
@@ -141,7 +131,7 @@ void Sens_info_read(struct Sensor_information* sens_info_ptr) //There is no chec
 	sens_info_ptr->ang_acc = ((unsigned) (short) UART1_reciever_buffer[11] << 8) | (unsigned) (short) UART1_reciever_buffer[10];
 	sens_info_ptr->car_speed = ((unsigned) (short) UART1_reciever_buffer[13] << 8) | (unsigned) (short) UART1_reciever_buffer[12];
 	sens_info_ptr->dist_to_stop_line = ((unsigned) (short) UART1_reciever_buffer[15] << 8) | (unsigned) (short) UART1_reciever_buffer[14];
-	sens_info_ptr->sign_type = UART1_reciever_buffer[16];
+	sens_info_ptr->sign_type = UART1_reciever_buffer[16];			
 	
 	//Enable UART1 interrupts
 	UCSR1B |= (1<<RXCIE1);
@@ -191,35 +181,42 @@ int main(void)
 	
 	DDRA = 0xFF; 
 	
-	PORTA = 1<<PORTA0;
+	
 	
 	
 
-	double counter = 0;
-	while (counter < 1000){
-		counter++;
-	}
-
-	PORTA |= (1<<PORTA1);
+	
 
 	//Sens_info_read(sens_info_ptr);
-	unsigned char test_var = 'a';
-	
-	
-	// Test for SPI
-	SPDR = test_var;
-	
-	
-	
-	
-	while(1)
-	{
+	unsigned char test_var;
 	
 
+	unsigned char test_var_1;
+
+
+
+	while(1)
+	{
+		
+		if(uart0_rx_not_empty_flag){
+			
+			test_var_1 = uart0_get_byte();
+			spi_send_byte(test_var_1);
+		}
+		
+		
+		
+		if(spi_rx_not_empty_flag){
+
+			test_var = spi_get_byte();
+			uart0_send_byte(test_var);
+		}
 		
 		
 		
 	}
 }
+
+
 
 
