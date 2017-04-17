@@ -17,6 +17,7 @@ typedef struct {
 spi_buffer_typedef rx_spi = {{0}, 0 , 0 ,0}; //declaring a receive buffer
 spi_buffer_typedef tx_spi = {{0}, 0 , 0 ,0}; //declaring a transmit buffer
 
+unsigned char spi_stc_chain_in_work = 0;
 
 ISR(SPI_STC_vect){
 
@@ -62,10 +63,11 @@ ISR(SPI_STC_vect){
 		
 	}
 	
-	else{
+	else{  //if tx_spi.num_bytes == 0
 		
 		//put scrap in SPDR
 		SPDR = 0xFD;
+		spi_stc_chain_in_work = 0;
 		
 	} 	
 	
@@ -79,8 +81,9 @@ void spi_slave_init(void){
 	DDRB = (1<<DDB6);
 	//Enable SPI and enable SPI_STC interrupt
 	SPCR = (1<<SPE) | (1<<SPIE) | (0<<MSTR);
-	//Setting PORTA0 as output
+	//Setting PORTA0 as output and set it to low, so master can detect rising edge
 	DDRA |= (1<<PORTA0);
+	PORTA &= ~(1<<PORTA0);
 	
 	SPDR = 0xFD;
 	
@@ -149,12 +152,13 @@ void spi_send_byte(unsigned char value){
 	//if there is only one byte in buffer, no SPI_STC is "in work"
 	//Therefore, it is started by adding the byte to SPDR and requesting a send to master
 	//PORTA0 is first set to low, so Master can detect rising edge
-	if(tx_spi.num_bytes == 1){
+	if(tx_spi.num_bytes == 1 && !(spi_stc_chain_in_work)){
 		
 		SPDR = tx_spi.buffer[tx_spi.i_first];
 		tx_spi.i_first++;
 		tx_spi.num_bytes--;
 		PORTA |= (1<<PORTA0);
+		spi_stc_chain_in_work = 1;
 	}
 			
 	//index turn-around
