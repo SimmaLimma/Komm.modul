@@ -1,5 +1,11 @@
 //Spi.h-filen MASTER
 
+/* Things to consider/fix:
+*-Clock is set to fck/16 (too slow?)
+*
+*
+*/
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdint.h>
@@ -24,6 +30,10 @@ ISR(SPI_STC_vect){
 	*else "stall"
 	*
 	*/
+	
+	
+
+	
 	
 	spi_stc_chain_in_work = 1;
 	
@@ -101,6 +111,21 @@ ISR(INT2_vect){
 }
 
 
+void spi_master_init(void) //not initialized
+{
+	//set MOSI and SCK as output, all others as input, and PB4 to output (because Master dont use SS-pin)
+	DDRB = (1<<DDB5) | (1<<DDB7) | (1<<DDB4) | (0<<DDB2);
+	// enable SPI, Master, set cloxk rate fck/16, and enable SPI_STC interrupt, and sets Slave Select (SS) to high
+	SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPR0) | (1<<SPIE); //CPOL cpha
+	//Enable int_2 external interrupt and interrupt happens on rising edge
+	EICRA = (1<<ISC20) | (1<<ISC21);
+	EIMSK = (1<<INT2);
+	
+
+}
+
+
+
 	
 unsigned char spi_get_byte(void){
 	/*get-byte function
@@ -171,12 +196,13 @@ void spi_send_byte(unsigned char value){
 		
 	//if there is only one byte in buffer, no SPI_STC is "in work"
 	//Therefore, it is started by adding the byte to SPDR
-	/*if((tx_spi.num_bytes == 1) && !(spi_stc_chain_in_work)){
+	if((tx_spi.num_bytes == 1) && !(spi_stc_chain_in_work)){
 		SPDR = tx_spi.buffer[tx_spi.i_first];
 		tx_spi.i_first++;
 		tx_spi.num_bytes--;
+		
 		spi_stc_chain_in_work = 1;
-	}*/
+	}
 	
 	//index turn-around
 	if(tx_spi.i_first == SPI_BUFFER_SIZE){
