@@ -1,6 +1,9 @@
 //hejhej
 //.c-file for slaves SPI_buffer
 
+//Comments:
+//You need to put volatile "unsigned char spi_rx_not_empty_flag = 0;" in main as global variable.
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdint.h>
@@ -80,7 +83,7 @@ void spi_slave_init(void){
 	//Set MISO output, all others input, DDPB6= MISO
 	DDRB = (1<<DDB6);
 	//Enable SPI and enable SPI_STC interrupt
-	SPCR = (1<<SPE) | (1<<SPIE) | (0<<MSTR);
+	SPCR = (1<<SPE) | (1<<SPIE) |  (0<<MSTR);
 	//Setting PORTA0 as output and set it to low, so master can detect rising edge
 	DDRA |= (1<<PORTA0);
 	PORTA &= ~(1<<PORTA0);
@@ -170,5 +173,63 @@ void spi_send_byte(unsigned char value){
 
 	sei();
 
+	
+}
+
+
+unsigned char is_package_recieved(void){
+	
+	if (rx_spi.num_bytes < (RECEIVED_PACKAGE_SIZE)){
+		return 0;
+	}
+	
+	return 1;
+}
+
+
+//returns true (i.e. >0) if succesfull, false (==0) else
+//Also deletes all bytes before header byte, in order to reach header byte. Therefore, it is important to only call this function when is_package_recieved() is true.
+unsigned char read_sensor_info(unsigned char* control_mode_ptr, struct Sensor_information* sens_info_ptr){
+	
+	//If no bytes to get, return "failure"
+	if(!(rx_spi.num_bytes)){
+		return 0;
+	}
+	
+	//First check if header-byte first in buffer and if enough bytes for a package to be recieved
+	if( (rx_spi.buffer[rx_spi.i_first] == 0xFF) && (is_package_recieved())){
+		
+		//dont use header byte
+		unsigned char temp_for_header;
+		temp_for_header = spi_get_byte();
+		
+		
+		//Read all info and write it to sensor struct
+
+		*control_mode_ptr = spi_get_byte();
+		sens_info_ptr->dist_right_line = spi_get_byte();
+		sens_info_ptr->dist_sonic_middle = spi_get_byte();
+		sens_info_ptr->dist_sonic_left = spi_get_byte();
+		sens_info_ptr->dist_sonic_right = spi_get_byte();
+		sens_info_ptr->dist_sonic_back = spi_get_byte();
+		sens_info_ptr->ang_acc = spi_get_byte();
+		sens_info_ptr->car_speed = spi_get_byte();
+		sens_info_ptr->dist_to_stop_line = spi_get_byte();
+		sens_info_ptr->sign_type = spi_get_byte();
+		
+		
+		return 1;
+	} else if (is_package_recieved()){
+		
+		//if there are bytes before header byte, throw them away. Then go into read_sensor_info again to check wheter there
+		//is something to read or not. The return value is evaluated by the last read_sensor_info.
+		unsigned char temp_scrap;
+		temp_scrap = spi_get_byte();
+		return read_sensor_info(control_mode_ptr, sens_info_ptr);
+	}
+	
+	
+	//if reaches this point, there are is a header byte but not enough of bytes to read
+	return 0;
 	
 }
