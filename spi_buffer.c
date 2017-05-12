@@ -115,8 +115,8 @@ void spi_master_init(void) //not initialized
 {
 	//set MOSI and SCK as output, all others as input, and PB4 to output (because Master dont use SS-pin)
 	DDRB = (1<<DDB5) | (1<<DDB7) | (1<<DDB4) | (0<<DDB2);
-	// enable SPI, Master, set cloxk rate fck/16, and enable SPI_STC interrupt, and sets Slave Select (SS) to high
-	SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPR0) | (1<<SPIE); //CPOL cpha
+	// enable SPI, Master, set clock rate fck/16, and enable SPI_STC interrupt, and sets Slave Select (SS) to high
+	SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPR0) |(1<<SPIE); //CPOL cpha
 	//Enable int_2 external interrupt and interrupt happens on rising edge
 	EICRA = (1<<ISC20) | (1<<ISC21);
 	EIMSK = (1<<INT2);
@@ -214,4 +214,43 @@ void spi_send_byte(unsigned char value){
 	sei();
 
 	
+}
+
+unsigned char is_spi_package_received(void){
+	/*Checks if package received.
+	*True if it is, false else
+	*/
+	
+	if (rx_spi.num_bytes < (RECEIVED_SPI_PACKAGE_SIZE)){
+		return 0;
+	}
+	
+	return 1;
+}
+
+unsigned char read_steering_info(unsigned char* esc_valueL_ptr,unsigned char* esc_valueH_ptr, unsigned char* steering_valueL_ptr, unsigned char* steering_valueH_ptr){
+	/*Returns True if received data
+	*Returns False if failed
+	* Currently this doesnt need a header byte, which increases the risk of a not synched system
+	*Add header byte functionality, if needed
+	*/
+	
+	if(is_spi_package_received()){
+		cli();
+		
+		unsigned char temp_byte = spi_get_byte();
+		*esc_valueH_ptr = temp_byte;
+		temp_byte = spi_get_byte();
+		*esc_valueL_ptr = temp_byte;
+		temp_byte = spi_get_byte(); 
+		*steering_valueH_ptr = temp_byte;
+		temp_byte = spi_get_byte(); 
+		*steering_valueL_ptr = temp_byte;
+		sei();
+		
+		return 1;
+	}
+	
+	
+	return 0;
 }
