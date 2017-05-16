@@ -179,7 +179,9 @@ int main(void)
 	unsigned char next_turn_decision = 0;
 	unsigned char previous_node = 0;
 	unsigned char next_node = 0;
-	unsigned char control_mode = 0x00;   //Begins at normal street driving
+	unsigned char control_mode = 0x00;//Begins at normal street driving
+	unsigned char prev_control_mode = 0x00;   
+	unsigned char angle_before_crossing;
 	
 	//TEST
 	//Assigning values from buffer to sens_info
@@ -215,7 +217,7 @@ int main(void)
 	sei();
 	
 
-	/*
+	
 	//Waiting for bluetooth to confirm. This is done by the PC sending 'g'.
 	unsigned char bt_ready = 0;
 	while(bt_ready != 'g'){
@@ -223,12 +225,12 @@ int main(void)
 			bt_ready = uart0_get_byte();
 		}
 	}
-*/
+
 	
 	//Send back confirmation, which is done by sending a 'c'
-	//uart0_send_byte('c');
+	uart0_send_byte('c');
 	
-	/*
+	
 	//Read map which is sent from PC.
 	while(!uart0_rx_not_empty_flag);
 	read_comp_info(control_com_ptr, nod_info_ptr, manual_mode_ptr, dest_list_ptr);
@@ -240,10 +242,10 @@ int main(void)
 	read_comp_info(control_com_ptr, nod_info_ptr, manual_mode_ptr, dest_list_ptr);
 	//Respond that finished reading
 	uart0_send_byte('d');
-	*/
 	
 	
-	/*
+	
+	
 	//Calculate optimal way, using Dijkstras
 	//------------------DIJSKTRAS ALGORITHM-----------------------
 
@@ -409,23 +411,23 @@ int main(void)
 			direction[d] = 'f';  //if the node is not a crossing, just continue "forward"
 		} 
 	
-		if(way_to_node == 'e' && way_to_node == 'n'){  //if the way in the node is east and the way out from the node is north => the direcion the car has to take when it comes into the node, is "right"
+		if(way_to_node == 'e' && way_to_node == 'n'){  //the right turn form the "I" in the "T", into the big road.
 			direction[d] = 'r';
 		}
-		else if(way_to_node == 'e' && way_to_node == 's'){
+		else if(way_to_node == 'e' && way_to_node == 's'){ //the left turn from the "I" in the "T", into the big road.
 			direction[d] = 'l';
 		}
-		else if(way_to_node == 'n' && way_to_node == 'e'){
+		else if(way_to_node == 'n' && way_to_node == 'e'){ //the left turn from the "-" in the "T", into the small road
 			direction[d] = 'l';
 		}
-		else if(way_to_node == 'n' && way_to_node == 's'){
+		else if(way_to_node == 'n' && way_to_node == 's'){ //the easiest "forward", where the both sides is "helt streckad", like the normal road
 			direction[d] = 'f';
 		}
-		else if(way_to_node == 's' && way_to_node == 'e'){
+		else if(way_to_node == 's' && way_to_node == 'e'){  //the right turn from the "-" in the "T", into the small road
 			direction[d] = 'r';
 		}
-		else if(way_to_node == 's' && way_to_node == 'n'){
-			direction[d] = 'f';
+		else if(way_to_node == 's' && way_to_node == 'n'){ //the harder "forward", where only the left hand side is "helt streckad"
+			direction[d] = 'F';
 		}
 	
 		d++;
@@ -433,7 +435,7 @@ int main(void)
 
 	
 	//end of Decision making	
-	*/
+	
 
 
 	//------------------END OF DIJSKTRAS-------
@@ -468,42 +470,85 @@ int main(void)
 		/*---Autonomous loop---*/
 
 		//Reading Computer Info
-		unsigned char package_type;
-		package_type = read_comp_info(&control_com, &nod_info, &manual_mode, &dest_list);
+		////unsigned char package_type;
+		////package_type = read_comp_info(&control_com, &nod_info, &manual_mode, &dest_list);
 		
 		//Going into manual mode if that is said from PC
-		if(manual_mode){
+		////if(manual_mode){
 			//Also check if exit manual mode is false, and exit if that is the case
-			control_mode = 0x06; //control mode = 6 is manual driving
+		////	control_mode = 0x06; //control mode = 6 is manual driving
 
-		}
+		////}
 
+
+		prev_control_mode = control_mode;
+		
 		//Step 6. "Inlasning av sensorinfo"
 		//waiting to receive info from sensor module
 		while(counter_UART1_reciever < 9); //checking if enough bytes in buffer to read
 		
 		Sens_info_read(sens_info_ptr);
+
 		
-		if(sensor_info.dist_to_stop_line != 0xFD){
-			counter_12++; 
-		}
+		if(sensor_info.dist_to_stop_line != 0x00 && control_mode == 0x00){ 
+			control_mode = 0x04;
+		} 
 		
-		if(counter_12 == 3){          //if stop line has been detected three times. Number of time detected might have to be adjusted
+		if(control_mode == 0x04 && prev_control_mode == 0x00){          //if stop line has been detected three times. Number of time detected might have to be adjusted
 			//Decision making for the incoming node phase.
 			next_turn_decision = direction[node_route[n]];
 			previous_node = node_route[n];
 			next_node = node_route[n+1];
-			control_mode = nod_info[(node_route[n]-1) * 7];
 			n++;
-			counter_12 = 0;
+			
+		} else if(sensor_info.dist_to_stop_line == 0x00 && control_mode == 0x04){
+			//Checking what to do next (next turn decision)
+			unsigned short temp_node_type;
+			temp_node_type = nod_info[(node_route[n]-1) * 7];
+			//if-cases that decides what car should do next
+			if(temp_node_type == 0x04){ //If stopplinje-node
+				control_mode == 0x00;  //drive "vanlig vag"
+				
+			} else if(temp_node_type == 0x01){ //if crossing
+				if(next_turn_decision == 'f'){ // if super-easy straight forward driving
+					control_mode = 0x00;      //drive normal way
+				} else { //all other turns in crossing
+					control_mode = 0x01; //crossing mode for control mode
+				}
+			}
 		}
+		
+		
+		if(control_mode == 0x01 && prev_control_mode == 0x04 && next_turn_decision != 'F'){  //Reading angle before crossing, to have reference to when crossing mode done
+			angle_before_crossing = sensor_info.angle;
+		}
+		
+		//Reading angle and making it absolute value
+		unsigned char abs_angle_temp;
+		abs_angle_temp = sensor_info.angle - angle_before_crossing;
+		if(abs_angle_temp < 0){
+			abs_angle_temp = -abs_angle_temp;
+		}
+		
+		//checking if crossing mode done
+		if((control_mode == 0x01) && (abs_angle_temp > 80) && (next_turn_decision != 'F')){ 
+				control_mode = 0x00; //if crossing mode done, set normal-way-driving
+		}
+		
+		//TO FIX
+		//Fix a way to check when 'F'-decision is done
+		if(control_mode == 0x01 && next_turn_decision == 'F' && 0){
+			control_mode = 0x00;
+		}
+		
+		
 
 		//Step 1.
 		
 		//Step 2. "Utskrivning av sensorinfo till styrmodul". When this happens the first round, the styrmodul starts (?).
 		//To styrmodul
 		spi_send_byte(0xFF); //header byte
-		spi_send_byte(control_mode); //control mode
+		spi_send_byte(0x00); //control_mode); //control mode
 		spi_send_byte(sensor_info.dist_right_line); //Distance right line
 		spi_send_byte(sensor_info.angular_diff); //ang diff
 		spi_send_byte(sensor_info.dist_sonic_middle); //UL front
@@ -511,7 +556,7 @@ int main(void)
 		spi_send_byte(sensor_info.dist_sonic_right); //UL right
 		spi_send_byte(sensor_info.dist_sonic_back); //UL back
 		spi_send_byte(sensor_info.angle); //Angle
-		spi_send_byte(sensor_info.car_speed); //Car speed
+		spi_send_byte(next_turn_decision); //Next turn decision,  (fd car_speed)
 		spi_send_byte(sensor_info.dist_to_stop_line); //dist to stop line
 		//spi_send_byte(sensor_info.sign_type); //sign type
 		//10+1 bytes
@@ -524,8 +569,8 @@ int main(void)
 		
 		//Step 5. "Utskrivning av sensor- och styrinfo till PC".
 		uart0_send_byte(0xFF); //header byte
-		uart0_send_byte(0x01); //package type 0x01, not sure if needed. Right now sending as scrap-byte, to make it sync (for some reason...)
 		uart0_send_byte(control_mode); //control mode
+		uart0_send_byte(0x01); //package type 0x01, not sure if needed. Right now sending as scrap-byte, to make it sync (for some reason...)
 		uart0_send_byte(esc_valueH); //escValue<<8
 		uart0_send_byte(esc_valueL); //escValue
 		uart0_send_byte(steering_valueH); //steeringValue <<8
@@ -573,6 +618,13 @@ int main(void)
 	}
 	
 }
+
+
+
+
+
+
+
 
 
 
