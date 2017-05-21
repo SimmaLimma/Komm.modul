@@ -129,13 +129,13 @@ int main(void)
 	unsigned char *nod_info_ptr; /// needed here or not??
 	nod_info_ptr = &nod_info;
 	
-	unsigned char manual_mode = 0; // 1 if manual mode, 0 if autonomous mode
+	volatile unsigned char manual_mode = 0; // 1 if manual mode, 0 if autonomous mode
 	unsigned char *manual_mode_ptr;
 	manual_mode_ptr = &manual_mode;
-	volatile unsigned char dest_list[50];
+	volatile unsigned char dest_list[50] = {0};
 	volatile unsigned char *dest_list_ptr;
 	dest_list_ptr = &dest_list;
-	unsigned char control_com;
+	volatile unsigned char control_com;
 	unsigned char *control_com_ptr;
 	control_com_ptr = &control_com;
 	unsigned char node_route_ptr;
@@ -145,10 +145,10 @@ int main(void)
 	struct Sensor_information* sens_info_ptr;
 	sens_info_ptr = &sensor_info;
 	
-	unsigned char esc_valueH = 0;
-	unsigned char esc_valueL = 0;
-	unsigned char steering_valueH = 0;
-	unsigned char steering_valueL = 0;
+	volatile unsigned char esc_valueH = 0;
+	volatile unsigned char esc_valueL = 0;
+	volatile unsigned char steering_valueH = 0;
+	volatile unsigned char steering_valueL = 0;
 	
 	//For Dijsktras
 	unsigned int j = 0;
@@ -157,17 +157,17 @@ int main(void)
 	unsigned int num_of_nodes = 0;
 	unsigned int number=0;
 	
-	unsigned char end_node_sub;
-	unsigned char n_of_col = 7; // correct?
-	unsigned char current_node;
-	unsigned char scanned[250] = {0};
-	unsigned char node_route[250];
-	unsigned char prev_node[250] = {0};
-	unsigned char prev_node_index[250] = {0};
-	unsigned short dist_to_node[250];
+	volatile unsigned char end_node_sub;
+	volatile unsigned char n_of_col = 7; // correct?
+	volatile unsigned char current_node;
+	volatile unsigned char scanned[250] = {0};
+	volatile unsigned char node_route[250];
+	volatile unsigned char prev_node[250] = {0};
+	volatile unsigned char prev_node_index[250] = {0};
+	volatile unsigned short dist_to_node[250];
 	
-	unsigned char start_node;
-	unsigned char end_node;
+	volatile unsigned char start_node;
+	volatile unsigned char end_node;
 	//End of "For Dijsktras"
 	
 	//for Decision making
@@ -180,11 +180,11 @@ int main(void)
 	unsigned int h = 0;
 	unsigned int n = 1;
 	unsigned int counter_12 = 0;
-	unsigned char next_turn_decision = 0;
+	volatile unsigned char next_turn_decision = 0;
 	unsigned char previous_node = 0;
 	unsigned char next_node = 0;
-	unsigned char control_mode = 0x00;//Begins at normal street driving
-	unsigned char prev_control_mode = 0x00;
+	volatile unsigned char control_mode = 0x00;//Begins at normal street driving
+	volatile unsigned char prev_control_mode = 0x00;
 	unsigned char angle_before_crossing;
 	
 	//SETTING HARD CODED MAP FOR TEST. THIS MAKES FIRST RIGHT TURN, THEN STRAIGHT FORWARD AND LASTLY A LEFT TURN
@@ -359,7 +359,8 @@ int main(void)
 	
 	
 	dest_list[0] = 1;
-	dest_list[1] = 10;
+	dest_list[1] = 5;
+	dest_list[2] = 10;
 	//END OF HARD CODED MAP
 	
 	//TEST
@@ -446,17 +447,17 @@ int main(void)
 	start_node = dest_list[0];
 	end_node = dest_list[1];
 	
-	unsigned int counter_dest_list = 1;
+	volatile unsigned int counter_dest_list = 1;
 	
 	 //set start_node as the first node of the route, j starts at 0
+	 //just first time
+	 current_node = start_node;
+	 dist_to_node[current_node] = 0;
+	 scanned[current_node] = 1;
+	 node_route[j] = current_node;
+	 
 	//Big loop for A->B
-	//while(end_node != 0x00){ //there is no 0xFE as the last byte right?
-
-		//just first time
-		current_node = start_node;
-		dist_to_node[current_node] = 0;
-		scanned[current_node] = 1;
-		node_route[j] = current_node;
+	while(end_node != 0x00){ //there is no 0xFE as the last byte right?
 
 		while(current_node != end_node){
 			
@@ -545,11 +546,10 @@ int main(void)
 			
 		}
 		
-		//counter_dest_list++;
-		//start_node = current_node;
-		//end_node = dest_list[counter_dest_list];
-		
-//	}
+		counter_dest_list++;
+		start_node = current_node;
+		end_node = dest_list[counter_dest_list];
+	}
 
 		PORTA |= (1<<PORTA0);
 
@@ -611,7 +611,8 @@ int main(void)
 		
 		d++;
 	}
-
+	
+	
 	
 	//end of Decision making
 	
@@ -785,7 +786,6 @@ int main(void)
 	}
 	
 }
-
 
 
 
