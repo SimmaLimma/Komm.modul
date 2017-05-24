@@ -195,13 +195,13 @@ int main(void)
 	//SETTING HARD CODED MAP FOR TEST. THIS MAKES FIRST RIGHT TURN, THEN STRAIGHT FORWARD AND LASTLY A LEFT TURN
 	unsigned int counter_map_setting = 0;
 	unsigned short temp_node_type = 113;
-	
+	/*
 	//Nod 1
 	nod_info[counter_map_setting] = 4;
 	counter_map_setting++;
 	nod_info[counter_map_setting] = 2;
 	counter_map_setting++;
-	nod_info[counter_map_setting] = 7;
+	nod_info[counter_map_setting] = 1;
 	counter_map_setting++;
 	nod_info[counter_map_setting] = 0;
 	counter_map_setting++;
@@ -215,59 +215,27 @@ int main(void)
 	//Nod 2
 	nod_info[counter_map_setting] = 1;
 	counter_map_setting++;
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 2;
+	nod_info[counter_map_setting] = 1;
 	counter_map_setting++;
 	nod_info[counter_map_setting] = 1;
 	counter_map_setting++;
-	nod_info[counter_map_setting] = 7;
+	nod_info[counter_map_setting] = 3;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 1;
 	counter_map_setting++;
 	nod_info[counter_map_setting] = 3;
 	counter_map_setting++;
-	nod_info[counter_map_setting] = 5;
+	nod_info[counter_map_setting] = 2;
 	counter_map_setting++;
 	
 	//Nod 3
 	nod_info[counter_map_setting] = 4;
 	counter_map_setting++;
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 6;
-	counter_map_setting++;
 	nod_info[counter_map_setting] = 2;
 	counter_map_setting++;
-	nod_info[counter_map_setting] = 5;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 0;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 10000;
-	counter_map_setting++;
-	
-	//Nod 4
 	nod_info[counter_map_setting] = 1;
 	counter_map_setting++;
-	nod_info[counter_map_setting] = 3;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 6;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 5;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 5;
-	counter_map_setting++;
 	nod_info[counter_map_setting] = 2;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 2;
-	counter_map_setting++;
-
-	//Nod 5
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 5;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 6;
 	counter_map_setting++;
 	nod_info[counter_map_setting] = 2;
 	counter_map_setting++;
@@ -276,38 +244,70 @@ int main(void)
 	nod_info[counter_map_setting] = 10000;
 	counter_map_setting++;
 	
-	
-	//Nod 6
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 5;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 2;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 0;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 10000;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 0;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 10000;
-	counter_map_setting++;
-	
-	
-	////Nod 7
+	////Nod 4
+	//nod_info[counter_map_setting] = 4;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 5;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 4;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 3;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 2;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 0;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 10000;
+	//counter_map_setting++;
+//
+	////Nod 5
+	//nod_info[counter_map_setting] = 4;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 6;
+	//counter_map_setting++;
 	//nod_info[counter_map_setting] = 1;
 	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 8;
+	//nod_info[counter_map_setting] = 4;
 	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 4;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 0;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 10000;
+	//counter_map_setting++;
+	//
+	//
+	////Nod 6
 	//nod_info[counter_map_setting] = 1;
 	//counter_map_setting++;
 	//nod_info[counter_map_setting] = 5;
 	//counter_map_setting++;
 	//nod_info[counter_map_setting] = 1;
 	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 9;
-	//counter_map_setting++;
 	//nod_info[counter_map_setting] = 1;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 3;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 2;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 3;
+	//counter_map_setting++;
+	//
+	//
+	////Nod 7
+	//nod_info[counter_map_setting] = 4;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 6;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 5;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 8;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 2;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 0;
+	//counter_map_setting++;
+	//nod_info[counter_map_setting] = 10000;
 	//counter_map_setting++;
 	//
 	////Nod 8
@@ -315,11 +315,11 @@ int main(void)
 	//counter_map_setting++;
 	//nod_info[counter_map_setting] = 7;
 	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 1;
+	//nod_info[counter_map_setting] = 2;
 	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 10;
+	//nod_info[counter_map_setting] = 0;
 	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 1;
+	//nod_info[counter_map_setting] = 10000;
 	//counter_map_setting++;
 	//nod_info[counter_map_setting] = 0;
 	//counter_map_setting++;
@@ -398,11 +398,13 @@ int main(void)
 	
 	
 	dest_list[0] = 1;
-	dest_list[1] = 6;
+	dest_list[1] = 3;
+	dest_list[2] = 1;
+	//dest_list[3] = 5;
 	//dest_list[2] = 6;
 	
 	//END OF HARD CODED MAP
-	
+	*/
 	//TEST
 	//Assigning values from buffer to sens_info
 	sens_info_ptr->dist_right_line = 0;
@@ -440,7 +442,7 @@ int main(void)
 	
 
 	
-/*	//Waiting for bluetooth to confirm. This is done by the PC sending 'g'.
+	//Waiting for bluetooth to confirm. This is done by the PC sending 'g'.
 	unsigned char bt_ready = 0;
 	while(bt_ready != 'g'){
 	if(uart0_rx_not_empty_flag){
@@ -464,7 +466,7 @@ int main(void)
 	//Respond that finished reading
 	uart0_send_byte('d');
 	
-	*/
+	
 	
 	
 	//Calculate optimal way, using Dijkstras
@@ -572,6 +574,17 @@ int main(void)
 					if(number == num_of_un_scanned){
 						scanned[i] = 1;
 						current_node = i;
+						//new!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						int counter_13 = 1;
+						if(prev_node[current_node] != node_route[prev_node_index[current_node]]){
+							node_route[prev_node_index[current_node]] = prev_node[current_node];
+							while(prev_node_index[current_node] - counter_13 >= 0 && node_route[prev_node_index[current_node] - counter_13] != start_node){
+								node_route[prev_node_index[current_node] - counter_13] = prev_node[node_route[prev_node_index[current_node] - counter_13 + 1]];
+								counter_13++;
+							}
+						}
+						//end new!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						
 						node_route[prev_node_index[current_node] + 1] = current_node;
 						
 						while((prev_node_index[current_node] + 1 + k) <= num_of_nodes){
@@ -860,9 +873,6 @@ int main(void)
 	}
 	
 }
-
-
-
 
 
 
