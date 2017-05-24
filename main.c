@@ -537,6 +537,10 @@ int main(void)
 			
 			}
 			
+			//hejjjjjj
+			
+			//en hejjjj
+			
 			///NEW!!!!!!!!!!!!!!!
 			dist_to_node[prev_node[current_node]] = 10000;
 			//END NEW!!!!!!!!!!!!
@@ -715,8 +719,9 @@ int main(void)
 
 		//Reading Computer Info
 		unsigned char package_type;
-		package_type = read_comp_info(&control_com, &nod_info, &manual_mode, &dest_list);
 		prev_manual_mode = manual_mode;
+		package_type = read_comp_info(&control_com, &nod_info, &manual_mode, &dest_list);
+		
 		
 		//Going into manual mode if that is said from PC
 		if(manual_mode){
@@ -748,7 +753,7 @@ int main(void)
 			next_node = node_route[n+1];
 		}
 		
-		if(sensor_info.dist_to_stop_line != 0x00 && control_mode == 0x00){
+		if(sensor_info.dist_to_stop_line == 0x01 && control_mode == 0x00){
 			control_mode = 0x04;
 		}
 		
@@ -778,12 +783,12 @@ int main(void)
 		
 		//Sensormodul gives value "zero" to angle, which is de facto 125
 		//checking if crossing mode done
-		if((control_mode == 0x01) && ( (sensor_info.angle > (125 + 65)) || (sensor_info.angle < (125 - 72)) ) && (next_turn_decision != 'F')){
+		if((control_mode == 0x01) && ( (sensor_info.angle > (125 + 60)) || (sensor_info.angle < (125 - 60)) ) && (next_turn_decision != 'F')){
 			control_mode = 0x00; //if crossing mode done, set normal-way-driving
 		}
 		
 		//Delay_counter has to go a few rounds, to prevent car from setting control_mode = 0x00 directly
-		if(control_mode == 0x01 && next_turn_decision == 'F' && delay_counter_F_crossing < 30){
+		if(control_mode == 0x01 && next_turn_decision == 'F' && delay_counter_F_crossing < 50){
 			delay_counter_F_crossing++;
 		}
 		//Fix a way to check when 'F'-decision is done
