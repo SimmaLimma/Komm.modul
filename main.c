@@ -783,7 +783,7 @@ int main(void)
 		
 		//Sensormodul gives value "zero" to angle, which is de facto 125
 		//checking if crossing mode done
-		if((control_mode == 0x01) && ( (sensor_info.angle > (125 + 60)) || (sensor_info.angle < (125 - 60)) ) && (next_turn_decision != 'F')){
+		if((control_mode == 0x01) && ( (sensor_info.angle > (125 + 60)) || (sensor_info.angle < (125 - 70)) ) && (next_turn_decision != 'F')){
 			control_mode = 0x00; //if crossing mode done, set normal-way-driving
 		}
 		
