@@ -215,83 +215,84 @@ int main(void)
 	//Nod 2
 	nod_info[counter_map_setting] = 1;
 	counter_map_setting++;
-	nod_info[counter_map_setting] = 1;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 1;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 3;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 1;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 3;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 2;
-	counter_map_setting++;
-	
-	//Nod 3
 	nod_info[counter_map_setting] = 4;
 	counter_map_setting++;
 	nod_info[counter_map_setting] = 2;
 	counter_map_setting++;
 	nod_info[counter_map_setting] = 1;
 	counter_map_setting++;
+	nod_info[counter_map_setting] = 1;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 3;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 1;
+	counter_map_setting++;
+	
+	//Nod 3
+	nod_info[counter_map_setting] = 4;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 4;
+	counter_map_setting++;
 	nod_info[counter_map_setting] = 2;
 	counter_map_setting++;
 	nod_info[counter_map_setting] = 2;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 1;
 	counter_map_setting++;
 	nod_info[counter_map_setting] = 0;
 	counter_map_setting++;
 	nod_info[counter_map_setting] = 10000;
 	counter_map_setting++;
 	
-	////Nod 4
-	//nod_info[counter_map_setting] = 4;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 5;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 4;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 3;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 2;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 0;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 10000;
-	//counter_map_setting++;
-//
-	////Nod 5
-	//nod_info[counter_map_setting] = 4;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 6;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 1;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 4;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 4;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 0;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 10000;
-	//counter_map_setting++;
-	//
-	//
-	////Nod 6
-	//nod_info[counter_map_setting] = 1;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 5;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 1;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 1;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 3;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 2;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 3;
-	//counter_map_setting++;
+	//Nod 4
+	nod_info[counter_map_setting] = 4;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 3;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 2;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 5;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 2;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 2;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 2;
+	counter_map_setting++;
+	
+	//Nod 5
+	nod_info[counter_map_setting] = 4;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 4;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 2;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 6;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 4;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 0;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 10000;
+	counter_map_setting++;
+	
+	
+	//Nod 6
+	nod_info[counter_map_setting] = 1;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 5;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 4;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 0;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 10000;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 0;
+	counter_map_setting++;
+	nod_info[counter_map_setting] = 10000;
+	counter_map_setting++;
+	*/
 	//
 	//
 	////Nod 7
@@ -373,7 +374,7 @@ int main(void)
 	//counter_map_setting++;
 	//nod_info[counter_map_setting] = 10000;
 	//counter_map_setting++;
-//
+	//
 	////Nod 10
 	//nod_info[counter_map_setting] = 4;
 	//counter_map_setting++;
@@ -398,13 +399,13 @@ int main(void)
 	
 	
 	dest_list[0] = 1;
-	dest_list[1] = 3;
-	dest_list[2] = 1;
-	//dest_list[3] = 5;
+	dest_list[1] = 4;
+	dest_list[2] = 3;
+	dest_list[3] = 6;
 	//dest_list[2] = 6;
 	
 	//END OF HARD CODED MAP
-	*/
+	
 	//TEST
 	//Assigning values from buffer to sens_info
 	sens_info_ptr->dist_right_line = 0;
@@ -445,9 +446,9 @@ int main(void)
 	//Waiting for bluetooth to confirm. This is done by the PC sending 'g'.
 	unsigned char bt_ready = 0;
 	while(bt_ready != 'g'){
-	if(uart0_rx_not_empty_flag){
-	bt_ready = uart0_get_byte();
-	}
+		if(uart0_rx_not_empty_flag){
+			bt_ready = uart0_get_byte();
+		}
 	}
 	
 	//Send back confirmation, which is done by sending a 'c'
@@ -521,10 +522,11 @@ int main(void)
 						//scanned[*(nod_info_ptr + ((current_node-1)*n_of_col + 1 + counter_5))] = 1;
 
 						//Checking on what index prev_node it at
-						while(x < num_of_nodes){
+					
+						while(x < 50){
 							if(node_route[x] == current_node){
 								prev_node_index[nod_info[(current_node-1)*n_of_col + 1 + counter_5]] = x;
-							
+								
 							}
 							x++;
 						}
@@ -534,7 +536,7 @@ int main(void)
 				
 				counter_5 += 2;
 				x=0;
-			
+				
 			}
 			
 			//hejjjjjj
@@ -668,7 +670,13 @@ int main(void)
 		}
 		else{
 			
-			direction[d] = 'f';  //if the node is not a crossing, just continue "forward"
+			if(nod_info[(node_route[d]-1)*7] == 0x05){
+				
+				direction[d] = 'p';  //if the node is not a crossing, just continue "forward"
+				
+				} else {
+				direction[d] = 'f';
+			}
 		}
 		
 		if(way_to_node == 'e' && way_from_node == 'n'){  //the right turn form the "I" in the "T", into the big road.
@@ -725,7 +733,7 @@ int main(void)
 		
 		//Going into manual mode if that is said from PC
 		if(manual_mode){
-		//Also check if exit manual mode is false, and exit if that is the case
+			//Also check if exit manual mode is false, and exit if that is the case
 			control_mode = 0x06; //control mode = 6 is manual driving
 
 		}
@@ -757,12 +765,20 @@ int main(void)
 			control_mode = 0x04;
 		}
 		
+		
+		//When been in parking mode and want to go to normal mode
+		if(control_mode == 0x05 && prev_control_mode == 0x05){
+			control_mode = 0x00;
+		}
+	
+		
 		if(control_mode == 0x04 && prev_control_mode == 0x00){          //if stop line has been detected three times. Number of time detected might have to be adjusted
 			//Decision making for the incoming node phase.
 			next_turn_decision = direction[n];
 			n++;
 			
-			} else if(sensor_info.dist_to_stop_line == 0x00 && control_mode == 0x04){
+		}
+		else if(sensor_info.dist_to_stop_line == 0x00 && control_mode == 0x04){
 			
 			//Checking what to do next (next turn decision)
 			//	unsigned short temp_node_type;
@@ -771,13 +787,20 @@ int main(void)
 			if(temp_node_type == 0x04){ //If stopplinje-node
 				control_mode = 0x00;  //drive "vanlig vag"
 				
-				} else if(temp_node_type == 0x01){ //if crossing
+			}
+			else if(temp_node_type == 0x01){ //if crossing
 				if(next_turn_decision == 'f'){ // if super-easy straight forward driving
 					control_mode = 0x00;      //drive normal way
-					} else { //all other are turns in crossing
+				}
+				
+				else { //all other are turns in crossing
 					control_mode = 0x01; //crossing mode for control mode
 				}
 			}
+			else if(temp_node_type == 0x05){
+				control_mode = 0x05;
+			}
+			
 		}
 		
 		
@@ -860,8 +883,7 @@ int main(void)
 			read_steering_info(&esc_valueL, &esc_valueH, &steering_valueL, &steering_valueH);
 		}
 		
-		
-		
+
 		
 		
 		/*---Manual loop---*/
@@ -878,6 +900,4 @@ int main(void)
 	}
 	
 }
-
-
 
