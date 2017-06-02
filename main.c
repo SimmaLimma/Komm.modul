@@ -128,7 +128,7 @@ int main(void)
 	DDRA = 0xFF;
 	//end of testing
 
-	volatile unsigned short nod_info[250*7]; // nod_info[1][1]=node 1's type
+	volatile unsigned short nod_info[250*7] = {0}; // nod_info[1][1]=node 1's type
 	unsigned char *nod_info_ptr; /// needed here or not??
 	nod_info_ptr = &nod_info;
 	
@@ -139,10 +139,10 @@ int main(void)
 	volatile unsigned char dest_list[50] = {0};
 	volatile unsigned char *dest_list_ptr;
 	dest_list_ptr = &dest_list;
-	unsigned char control_com;
+	unsigned char control_com = 0;
 	unsigned char *control_com_ptr;
 	control_com_ptr = &control_com;
-	unsigned char node_route_ptr;
+	unsigned char node_route_ptr = 0;
 	
 	//init var for sensor information from sensormodul and pointer to it aswell
 	struct Sensor_information sensor_info;
@@ -157,251 +157,55 @@ int main(void)
 	//For Dijsktras
 	unsigned int j = 0;
 	unsigned int i = 0;
-	unsigned int node;
+	unsigned int node = 0;
 	unsigned int num_of_nodes = 0;
-	unsigned int number=0;
+	unsigned int number = 0;
 	
-	unsigned char end_node_sub;
-	unsigned char n_of_col = 7; // correct?
-	unsigned char current_node;
+	unsigned char end_node_sub = 0;
+	unsigned char n_of_col = 6; // correct?
+	unsigned char current_node = 0;
 	unsigned char scanned[250] = {0};
-	unsigned char node_route[250];
+	unsigned char node_route[250] = {0};
 	unsigned char prev_node[250] = {0};
 	unsigned char prev_node_index[250] = {0};
-	unsigned short dist_to_node[250];
+	unsigned short dist_to_node[250] = {0};
 	
-	unsigned char start_node;
-	unsigned char end_node;
+	unsigned char start_node = 0;
+	unsigned char end_node = 0;
 	//End of "For Dijsktras"
 	
 	//for Decision making
-	unsigned int d=1;
+	unsigned int d=0;
 	//unsigned char way_to_node;
 	//unsigned char way_from_node;
 	volatile unsigned char direction[250] = {0};
 	//end of for Decision making;
 	
 	unsigned int h = 0;
-	unsigned int n = 1;
+	unsigned int n = 0;
 	unsigned int counter_12 = 0;
 	unsigned char next_turn_decision = 0;
 	unsigned char previous_node = 0;
 	unsigned char next_node = 0;
 	unsigned char control_mode = 0x00;//Begins at normal street driving
 	unsigned char prev_control_mode = 0x00;
-	unsigned char angle_before_crossing;
+	unsigned char angle_before_crossing = 0;
 	unsigned char delay_counter_F_crossing = 0;
 	
 	//SETTING HARD CODED MAP FOR TEST. THIS MAKES FIRST RIGHT TURN, THEN STRAIGHT FORWARD AND LASTLY A LEFT TURN
 	unsigned int counter_map_setting = 0;
 	unsigned short temp_node_type = 113;
-	/*
-	//Nod 1
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 2;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 1;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 0;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 10000;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 0;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 10000;
-	counter_map_setting++;
-	
-	//Nod 2
-	nod_info[counter_map_setting] = 1;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 2;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 1;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 1;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 3;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 1;
-	counter_map_setting++;
-	
-	//Nod 3
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 2;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 2;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 1;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 0;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 10000;
-	counter_map_setting++;
-	
-	//Nod 4
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 3;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 2;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 5;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 2;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 2;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 2;
-	counter_map_setting++;
-	
-	//Nod 5
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 2;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 6;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 0;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 10000;
-	counter_map_setting++;
-	
-	
-	//Nod 6
-	nod_info[counter_map_setting] = 1;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 5;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 4;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 0;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 10000;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 0;
-	counter_map_setting++;
-	nod_info[counter_map_setting] = 10000;
-	counter_map_setting++;
-	*/
-	//
-	//
-	////Nod 7
-	//nod_info[counter_map_setting] = 4;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 6;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 5;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 8;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 2;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 0;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 10000;
-	//counter_map_setting++;
-	//
-	////Nod 8
-	//nod_info[counter_map_setting] = 4;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 7;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 2;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 0;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 10000;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 0;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 10000;
-	//counter_map_setting++;
-	//
-	//////Nod 9
-	////nod_info[counter_map_setting] = 4;
-	////counter_map_setting++;
-	////nod_info[counter_map_setting] = 8;
-	////counter_map_setting++;
-	////nod_info[counter_map_setting] = 1;
-	////counter_map_setting++;
-	////nod_info[counter_map_setting] = 0;
-	////counter_map_setting++;
-	////nod_info[counter_map_setting] = 10000;
-	////counter_map_setting++;
-	////nod_info[counter_map_setting] = 0;
-	////counter_map_setting++;
-	////nod_info[counter_map_setting] = 10000;
-	////counter_map_setting++;
-	////
-	//////Nod 10
-	////nod_info[counter_map_setting] = 4;
-	////counter_map_setting++;
-	////nod_info[counter_map_setting] = 8;
-	////counter_map_setting++;
-	////nod_info[counter_map_setting] = 1;
-	////counter_map_setting++;
-	////nod_info[counter_map_setting] = 0;
-	////counter_map_setting++;
-	////nod_info[counter_map_setting] = 10000;
-	////counter_map_setting++;
-	////nod_info[counter_map_setting] = 0;
-	////counter_map_setting++;
-	////nod_info[counter_map_setting] = 10000;
-	////counter_map_setting++;
-	//
-	////Nod 9
-	//nod_info[counter_map_setting] = 4;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 10;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 1;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 7;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 1;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 0;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 10000;
-	//counter_map_setting++;
-	//
-	////Nod 10
-	//nod_info[counter_map_setting] = 4;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 8;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 1;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 9;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 1;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 0;
-	//counter_map_setting++;
-	//nod_info[counter_map_setting] = 10000;
-	//counter_map_setting++;
-	//
-	//End
+
 	
 	nod_info[counter_map_setting] = 0xFE;
-	counter_map_setting++;
+	//counter_map_setting++;
 	
 	
 	
-	dest_list[0] = 1;
-	dest_list[1] = 4;
-	dest_list[2] = 3;
-	dest_list[3] = 6;
+	//dest_list[0] = 12;
+	//dest_list[1] = 11;
+	//dest_list[2] = 3;
+	//dest_list[3] = 2;
 	//dest_list[2] = 6;
 	
 	//END OF HARD CODED MAP
@@ -444,7 +248,7 @@ int main(void)
 
 	
 	//Waiting for bluetooth to confirm. This is done by the PC sending 'g'.
-	unsigned char bt_ready = 0;
+	volatile unsigned char bt_ready = 0;
 	while(bt_ready != 'g'){
 		if(uart0_rx_not_empty_flag){
 			bt_ready = uart0_get_byte();
@@ -455,11 +259,12 @@ int main(void)
 	uart0_send_byte('c');
 	
 	
-	//Read map which is sent from PC.
+	////Read map which is sent from PC.
 	while(!uart0_rx_not_empty_flag);
 	read_comp_info(control_com_ptr, nod_info_ptr, manual_mode_ptr, dest_list_ptr);
-	//Responding that map is read
+	////Responding that map is read
 	uart0_send_byte('m');
+	
 	
 	//Read destination list from PC
 	while(!uart0_rx_not_empty_flag);
@@ -483,7 +288,7 @@ int main(void)
 		num_of_nodes++;
 		dist_to_node[i+1] = 10000; //does this works??
 		i++;
-		node = nod_info[i*7];  // *(nod_info_ptr + (i * n_of_col));
+		node = nod_info[i*6];  // *(nod_info_ptr + (i * n_of_col));
 		
 	}
 	
@@ -512,20 +317,20 @@ int main(void)
 			// Checking if the distance to all nodes from current node is shorter than the current "dist_to_node", (if it is: prev_node sets to current node, so we know what node gave the node it's shortest distance)
 			unsigned int x=0;
 			unsigned int counter_5 = 0;
-			while(counter_5 < 5){
+			while(counter_5 < 4){
 				
-				if(scanned[nod_info[(current_node-1)*n_of_col + 1 + counter_5]] != 1){
-					if((dist_to_node[current_node] + nod_info[(current_node-1)*n_of_col + 2 + counter_5]) < dist_to_node[nod_info[(current_node-1)*n_of_col + 1 + counter_5]]  ){
+				if(scanned[nod_info[(current_node-1)*n_of_col + counter_5]] != 1){
+					if((dist_to_node[current_node] + nod_info[(current_node-1)*n_of_col + 1 + counter_5]) < dist_to_node[nod_info[(current_node-1)*n_of_col + counter_5]]  ){
 
-						dist_to_node[nod_info[(current_node-1)*n_of_col + 1 + counter_5]] = dist_to_node[current_node] + nod_info[(current_node-1)*n_of_col + 2 + counter_5];
-						prev_node[nod_info[(current_node-1)*n_of_col + 1 + counter_5]] = current_node;
+						dist_to_node[nod_info[(current_node-1)*n_of_col + counter_5]] = dist_to_node[current_node] + nod_info[(current_node-1)*n_of_col + 1 + counter_5];
+						prev_node[nod_info[(current_node-1)*n_of_col + counter_5]] = current_node;
 						//scanned[*(nod_info_ptr + ((current_node-1)*n_of_col + 1 + counter_5))] = 1;
 
 						//Checking on what index prev_node it at
 					
 						while(x < 50){
 							if(node_route[x] == current_node){
-								prev_node_index[nod_info[(current_node-1)*n_of_col + 1 + counter_5]] = x;
+								prev_node_index[nod_info[(current_node-1)*n_of_col + counter_5]] = x;
 								
 							}
 							x++;
@@ -534,20 +339,17 @@ int main(void)
 					}
 				}
 				
-				counter_5 += 2;
+				counter_5 += 3;
 				x=0;
 				
 			}
-			
-			//hejjjjjj
-			
-			//en hejjjj
+	
 			
 			///NEW!!!!!!!!!!!!!!!
-			dist_to_node[prev_node[current_node]] = 10000;
+			//dist_to_node[prev_node[current_node]] = 10000;
 			//END NEW!!!!!!!!!!!!
 
-			unsigned int num_of_un_scanned=0;
+			unsigned int num_of_un_scanned = 0;
 			i=1;
 			while(i <= num_of_nodes){
 				
@@ -581,6 +383,7 @@ int main(void)
 						scanned[i] = 1;
 						current_node = i;
 						//new!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						
 						int counter_13 = 1;
 						if(prev_node[current_node] != node_route[prev_node_index[current_node]]){
 							node_route[prev_node_index[current_node]] = prev_node[current_node];
@@ -637,73 +440,21 @@ int main(void)
 	PORTA |= (1<<PORTA0);
 
 	//Decision making
-	while(node_route[d] != 0){     //change to while not end_node?
-		//resetting way_to and way_from_node
-		way_to_node = 0;
-		way_from_node = 0;
-		
-		//checking if a node has three ways out from it, which means it's a crossing
-		if(nod_info[(node_route[d]-1)*7 + 1] && nod_info[(node_route[d]-1)*7 + 3] && nod_info[(node_route[d]-1)*7 + 5]){
-			
-			
-			if(node_route[d-1] == nod_info[(node_route[d]-1)*7 + 1]){
-				way_to_node = 'n';						//if the previous node has is the same number as nod_info[d-1 + 1] for the current node, the way TO the node is from north
-			}
-			else if (node_route[d-1] == nod_info[(node_route[d]-1)*7 + 3]){
-				way_to_node = 's';
-			}
-			else if(node_route[d-1] == nod_info[(node_route[d]-1)*7 + 5]){
-				way_to_node = 'e';
-			}
-			
-			if(node_route[d+1] == nod_info[(node_route[d]-1)*7 + 1]){ //if the next node has is the same number as nod_info[d-1 + 1] for the current node, the way FROM the node is to north
-				way_from_node = 'n';
-			}
-			else if(node_route[d+1] == nod_info[(node_route[d]-1)*7 + 3]){
-				way_from_node = 's';
-			}
-			else if (node_route[d+1] == nod_info[(node_route[d]-1)*7 + 5]){
-				way_from_node = 'e';
-			}
-			
+	
+	while(node_route[d+1] != 0){ //Remember d starts at 0, ie d=0
+		if(nod_info[ (node_route[d] -1) * n_of_col] == node_route[d+1]){
+			direction[d] = nod_info[ (node_route[d] -1) * n_of_col + 2];
 			
 		}
-		else{
-			
-			if(nod_info[(node_route[d]-1)*7] == 0x05){
-				
-				direction[d] = 'p';  //if the node is not a crossing, just continue "forward"
-				
-				} else {
-				direction[d] = 'f';
-			}
+		 
+		else if(nod_info[ (node_route[d] -1) * n_of_col + 3] == node_route[d+1])
+		{
+			direction[d] = nod_info[ (node_route[d] -1) * n_of_col + 5];
 		}
-		
-		if(way_to_node == 'e' && way_from_node == 'n'){  //the right turn form the "I" in the "T", into the big road.
-			direction[d] = 'r';
-		}
-		else if(way_to_node == 'e' && way_from_node == 's'){ //the left turn from the "I" in the "T", into the big road.
-			direction[d] = 'l';
-		}
-		else if(way_to_node == 'n' && way_from_node == 'e'){ //the left turn from the "-" in the "T", into the small road
-			direction[d] = 'l';
-		}
-		else if(way_to_node == 'n' && way_from_node == 's'){ //the easiest "forward", where the both sides is "helt streckad", like the normal road
-			direction[d] = 'f';
-		}
-		else if(way_to_node == 's' && way_from_node == 'e'){  //the right turn from the "-" in the "T", into the small road
-			direction[d] = 'r';
-		}
-		else if(way_to_node == 's' && way_from_node == 'n'){ //the harder "forward", where only the left hand side is "helt streckad"
-			direction[d] = 'F';
-		}
-		
 		d++;
 	}
-
 	
-	//end of Decision making
-	
+	//Decision making, END
 
 
 	//------------------END OF DIJSKTRAS-------
@@ -757,12 +508,13 @@ int main(void)
 		}
 		
 		if(sensor_info.dist_to_stop_line == 0x00 && control_mode == 0x00){
-			previous_node = node_route[n];
-			next_node = node_route[n+1];
+			previous_node = node_route[n+1];
+			next_node = node_route[n+2];
 		}
 		
 		if(sensor_info.dist_to_stop_line == 0x01 && control_mode == 0x00){
 			control_mode = 0x04;
+			
 		}
 		
 		
@@ -770,7 +522,7 @@ int main(void)
 		if(control_mode == 0x05 && prev_control_mode == 0x05){
 			control_mode = 0x00;
 		}
-	
+		
 		
 		if(control_mode == 0x04 && prev_control_mode == 0x00){          //if stop line has been detected three times. Number of time detected might have to be adjusted
 			//Decision making for the incoming node phase.
@@ -781,23 +533,20 @@ int main(void)
 		else if(sensor_info.dist_to_stop_line == 0x00 && control_mode == 0x04){
 			
 			//Checking what to do next (next turn decision)
-			//	unsigned short temp_node_type;
-			temp_node_type = nod_info[(node_route[n-1]-1) * 7];
+			//unsigned short temp_node_type;
+			//temp_node_type = nod_info[(node_route[n-1]-1) * 7];
 			//if-cases that decides what car should do next
-			if(temp_node_type == 0x04){ //If stopplinje-node
+			if(next_turn_decision == 'f'){ //If stopplinje-node
 				control_mode = 0x00;  //drive "vanlig vag"
 				
-			}
-			else if(temp_node_type == 0x01){ //if crossing
-				if(next_turn_decision == 'f'){ // if super-easy straight forward driving
-					control_mode = 0x00;      //drive normal way
-				}
+			}	
 				
-				else { //all other are turns in crossing
+			else if (next_turn_decision == 'l' || next_turn_decision == 'r' || next_turn_decision == 'F') 
+			{ //all other are turns in crossing
 					control_mode = 0x01; //crossing mode for control mode
-				}
+				
 			}
-			else if(temp_node_type == 0x05){
+			else if(next_turn_decision == 'p'){
 				control_mode = 0x05;
 			}
 			
@@ -843,7 +592,6 @@ int main(void)
 		spi_send_byte(sensor_info.dist_to_stop_line); //dist to stop line
 		//spi_send_byte(sensor_info.sign_type); //sign type
 		//10+1 bytes
-		
 		
 		
 		//Step 4. "Bearbetning av rutt". Calculate optimal way, if the destination list has been changed by the user.
